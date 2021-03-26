@@ -48,7 +48,7 @@ spec:
     mountPath:
       basePath: /opt/doorman
     vault:
-      address: http://172.28.3.111/
+      address: http://172.28.3.111
       role: vault-role
       authpath: cordadoorman
       serviceaccountname: vault-auth

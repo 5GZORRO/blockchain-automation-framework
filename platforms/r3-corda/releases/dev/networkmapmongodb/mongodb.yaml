@@ -27,7 +27,7 @@ spec:
       mountPath: /data/db
       volname: hostvol
     vault:
-      address: http://172.28.3.111/
+      address: http://172.28.3.111
       role: vault-role
       authpath: cordanetworkmap
       secretprefix: networkmap/credentials/mongodb
