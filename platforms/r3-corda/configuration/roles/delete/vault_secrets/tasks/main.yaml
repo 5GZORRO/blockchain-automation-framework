@@ -14,12 +14,12 @@
     context: "{{ kubernetes.context }}"
   ignore_errors: yes
 
-- name: "Delete service creds"
-  include_tasks: nested_main.yaml
-  loop: "{{ services | dict2items }}"
-  loop_control:
-    loop_var: service
-  when: component_type != 'node'
+# - name: "Delete service creds"
+#   include_tasks: nested_main.yaml
+#   loop: "{{ services | dict2items }}"
+#   loop_control:
+#     loop_var: service
+#   when: component_type != 'node'
 
 # Delete the Ambassador Creds for CA
 - name: Delete Ambassador creds

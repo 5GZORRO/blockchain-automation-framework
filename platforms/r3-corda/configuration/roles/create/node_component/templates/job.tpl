@@ -38,6 +38,7 @@ spec:
           sslKeystorePath: na-ssl-false
           trustStoreFilePath: na-ssl-false
       legalName: {{ node.subject|e }} #use peer-node level subject for legalName
+      notaryServiceLegalName: {{ node.notaryServiceLegalName|e }}
       messagingServerAddress:
       jvmArgs:
       systemProperties:

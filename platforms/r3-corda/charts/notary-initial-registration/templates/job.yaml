@@ -201,7 +201,7 @@ spec:
             attachmentCacheBound : {{ .Values.nodeConf.attachmentCacheBound }}
             notary : {
                 validating : {{ .Values.nodeConf.notary.validating }}
-                serviceLegalName : "{{ .Values.nodeConf.legalName }}"
+                serviceLegalName : "{{ .Values.nodeConf.notaryServiceLegalName }}"
             }
             detectPublicIp = {{ .Values.nodeConf.detectPublicIp }}
             additionalP2PAddresses = ["{{ .Values.nodeConf.ambassadorAddress }}"]

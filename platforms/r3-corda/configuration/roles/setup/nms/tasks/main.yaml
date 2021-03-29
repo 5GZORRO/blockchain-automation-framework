@@ -96,7 +96,7 @@
 
 
 # create deployment file for networkmap node when tls is off
-- name: "create nms"
+- name: "create nms tls off"
   include_role:
     name: create/k8_component
   vars:
@@ -112,7 +112,7 @@
   when: services.nms.tls == 'off'
 
 # create deployment file for networkmap node when tls is on
-- name: "create nms"
+- name: "create nms tls on"
   include_role:
     name: create/k8_component
   vars:
