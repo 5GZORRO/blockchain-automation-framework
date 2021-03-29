@@ -38,7 +38,6 @@ spec:
           sslKeystorePath: na-ssl-false
           trustStoreFilePath: na-ssl-false
       legalName: O=Notary,OU=Notary,L=London,C=GB #use peer-node level subject for legalName
-      legalName: O=Notary,OU=Notary,L=London,C=GB #use peer-node level subject for legalName
       notaryServiceLegalName: O=HA Notary,OU=Notary,L=London,C=GB
       messagingServerAddress:
       jvmArgs:
