@@ -322,7 +322,6 @@ spec:
           }
           database = {
           {{- if eq .Values.dataSourceProperties.dataSource.dataSourceClassName "oracle.jdbc.pool.OracleDataSource" }}
-              transactionIsolationLevel = READ_COMMITTED
               schema = xe
           {{- end}}
               runMigration = true
