@@ -1,19 +1,19 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: operatorBdb
+  name: operatorbdb
   annotations:
     fluxcd.io/automated: "false"
   namespace: operatorb-ns
 spec:
-  releaseName: operatorBdb
+  releaseName: operatorbdb
   chart:
     path: platforms/r3-corda/charts/h2
     git: git@github.com:5GZORRO/blockchain-automation-framework.git
     ref: operator-b
   values:
     replicaCount: 1
-    nodeName: operatorB
+    nodeName: operatorb
     metadata:
       namespace: operatorb-ns
     image:

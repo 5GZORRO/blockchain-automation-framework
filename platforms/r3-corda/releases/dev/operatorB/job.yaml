@@ -1,18 +1,18 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: operatorB-initial-registration
+  name: operatorb-initial-registration
   annotations:
     fluxcd.io/automated: "false"
   namespace: operatorb-ns
 spec:
-  releaseName: operatorB-initial-registration
+  releaseName: operatorb-initial-registration
   chart:
     path: platforms/r3-corda/charts/node-initial-registration
     git: git@github.com:5GZORRO/blockchain-automation-framework.git
     ref: operator-b
   values:
-    nodeName: operatorB
+    nodeName: operatorb
     replicas: 1
     metadata:
       namespace: operatorb-ns  
@@ -25,9 +25,9 @@ spec:
       networkmapCertAlias: 172.28.3.111
     nodeConf:
       p2p:
-        url: operatorB.operatorb-ns
+        url: operatorb.operatorb-ns
         port: 10002
-      ambassadorAddress: operatorB.develop.local.com:15020
+      ambassadorAddress: operatorb.develop.local.com:15020
       rpcSettings:
         useSsl: false
         standAloneBroker: false
@@ -53,10 +53,10 @@ spec:
       database:
         transactionIsolationLevel: READ_COMMITTED
         exportHibernateJMXStatistics: false
-      dbUrl: operatorBdb
+      dbUrl: operatorbdb
       dbPort: 9101
       dataSourceClassName: "org.h2.jdbcx.JdbcDataSource"
-      dataSourceUrl: "jdbc:h2:tcp://operatorBdb:9101/persistence;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=10000;WRITE_DELAY=100;AUTO_RECONNECT=TRUE;"
+      dataSourceUrl: "jdbc:h2:tcp://operatorbdb:9101/persistence;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=10000;WRITE_DELAY=100;AUTO_RECONNECT=TRUE;"
       jarPath: "/data/corda-workspace/h2/bin"
       networkMapURL: http://172.28.3.111:30040
       doormanURL: http://172.28.3.111:30030
@@ -73,7 +73,7 @@ spec:
     credentials:
       dataSourceUser: sa
       rpcUser:
-        - name: operatorBoperations
+        - name: operatorboperations
           permissions: [ALL]
 
     volume:
@@ -95,13 +95,13 @@ spec:
     vault:
       address: http://172.28.3.111
       role: vault-role
-      authpath: cordaoperatorB
+      authpath: cordaoperatorb
       serviceaccountname: vault-auth
-      dbsecretprefix: operatorB/credentials/database
-      rpcusersecretprefix: operatorB/credentials/rpcusers
-      tokensecretprefix: operatorB/credentials/vaultroottoken
-      keystoresecretprefix: operatorB/credentials/keystore
-      certsecretprefix: operatorB/certs
+      dbsecretprefix: operatorb/credentials/database
+      rpcusersecretprefix: operatorb/credentials/rpcusers
+      tokensecretprefix: operatorb/credentials/vaultroottoken
+      keystoresecretprefix: operatorb/credentials/keystore
+      certsecretprefix: operatorb/certs
         
     healthcheck:
       readinesscheckinterval: 10
