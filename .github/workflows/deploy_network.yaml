@@ -1,0 +1,49 @@
+name: Deploy Network
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: baf-build-zorro:latest
+    steps:
+    - run: mkdir /root/bin && mkdir /home/bin && export PATH=/home/bin:$PATH
+    - uses: actions/checkout@v2 
+    - run: ln -s $GITHUB_WORKSPACE /home
+    - run: apt-get install -y nodejs
+    - name: Make build dir
+      run: mkdir /home/blockchain-automation-framework/build
+    - name: Decode kubeconfig
+      run: echo ${{ secrets.KUBECONFIG_FILE }} | base64 -d > /home/blockchain-automation-framework/build/config
+    - name: Decode gitops keys
+      run: echo ${{ secrets.GITOPS_KEY }} | base64 -d > /home/blockchain-automation-framework/build/gitops
+    - name: Generate network.yaml
+      run: envsubst < network-template.yaml > /home/blockchain-automation-framework/build/network.yaml
+      env:
+        DOCKER_URL: index.docker.io/hyperledgerlabs
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOORMAN_URI: http://172.28.3.111:30030
+        NETWORK_MAP_URI: http://172.28.3.111:30040
+
+        VAULT_URL: http://172.28.3.111
+        VAULT_ROOT_TOKEN: ${{ secrets.VAULT_ROOT_TOKEN }}
+        GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+        GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+        GIT_EMAIL: zorro@zorro-ci.com
+
+        CORDA_VERSION: 4.4
+
+    - name: Add OpenVPN client.ovpn
+      run: echo ${{ secrets.CLIENT_OVPN }} | base64 -d > /home/blockchain-automation-framework/build/client.ovpn
+    - name: Connect to VPN
+      uses: "kota65535/github-openvpn-connect-action@v1" 
+      with:
+        config_file: /home/blockchain-automation-framework/build/client.ovpn
+        username: ${{ secrets.OVPN_USERNAME }}
+        password: ${{ secrets.OVPN_PASSWORD }}
+
+    - run: bash /home/run.sh
+      working-directory: /home/

@@ -7,9 +7,15 @@ FROM ubuntu:16.04
 # Create working directory
 WORKDIR /home/
 
+RUN apt update -y && \
+    apt-get -y install apt-transport-https ca-certificates curl
+
+RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && touch /etc/apt/sources.list.d/kubernetes.list
+RUN echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' | tee -a /etc/apt/sources.list.d/kubernetes.list
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        curl \
         unzip \
         build-essential \
         default-jre \
@@ -18,12 +24,23 @@ RUN apt-get update -y && \
         git \
         libdb-dev libleveldb-dev libsodium-dev zlib1g-dev libtinfo-dev \
         jq \
-        python \
-        python3-dev \
-        python3-pip && \
-        pip3 install --no-cache --upgrade pip setuptools wheel && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+        gettext-base \
+        openvpn \
+        nodejs \
+        sudo \
+        kubectl \
+        openvpn \
+        software-properties-common
+
+RUN curl -O https://releases.hashicorp.com/vault/1.6.2/vault_1.6.2_linux_amd64.zip && \
+    unzip vault_1.6.2_linux_amd64.zip && \
+    mv vault /usr/local/bin
+
+RUN apt purge python2.7-minimal -y
+
+RUN add-apt-repository -y ppa:deadsnakes/ppa && apt-get update && apt-get install -y python3.6 && mv /usr/bin/python3.6 /usr/bin/python3
+
+RUN curl -sS  https://bootstrap.pypa.io/get-pip.py >> setup.py && python3 setup.py
 
 RUN pip3 install ansible && \
     pip3 install jmespath && \
@@ -46,7 +63,6 @@ ENV PATH=/root/bin:/root/.local/bin/:$PATH
 # 3) Private key file which has write-access to the git repo
 
 #path to mount the repo
-VOLUME /home/blockchain-automation-framework/
-
+# VOLUME /home/blockchain-automation-framework/
 
 CMD ["/home/run.sh"]
