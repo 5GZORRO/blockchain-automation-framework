@@ -14,9 +14,10 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - run: mkdir /root/bin && mkdir /home/bin && export PATH=/home/bin:$PATH
-    - uses: actions/checkout@v2 
-    - run: ln -s $GITHUB_WORKSPACE /home
-    - run: apt-get install -y nodejs
+    - run: git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PASSWORD }}@github.com/5GZORRO/blockchain-automation-framework.git
+      working-directory: /home/
+    - run: ls -a /home/blockchain-automation-framework/
+    - run: apt-get install nodejs -y 
     - name: Make build dir
       run: mkdir /home/blockchain-automation-framework/build
     - name: Decode kubeconfig
@@ -25,6 +26,7 @@ jobs:
       run: echo ${{ secrets.GITOPS_KEY }} | base64 -d > /home/blockchain-automation-framework/build/gitops
     - name: Generate network.yaml
       run: envsubst < network-template.yaml > /home/blockchain-automation-framework/build/network.yaml
+      working-directory: /home/blockchain-automation-framework/
       env:
         DOCKER_URL: index.docker.io/hyperledgerlabs
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
