@@ -16,5 +16,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: 5GZORRO/blockchain-automation-framwork/baf-build-zorro
+          repository: 5gzorro/blockchain-automation-framwork/baf-build-zorro
           tag_with_ref: true
