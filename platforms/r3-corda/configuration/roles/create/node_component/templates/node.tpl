@@ -99,8 +99,8 @@ spec:
     volume:
       baseDir: /base/corda
     resources:
-      limits: "1Gi"
-      requests: "1Gi" 
+      limits: "2Gi"
+      requests: "2Gi" 
     pvc:
       name: {{ component_name|e }}-pvc
       annotations: {}
