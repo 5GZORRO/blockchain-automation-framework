@@ -1,21 +1,21 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: operator-b
+  name: operatorb-initial-registration
   annotations:
     fluxcd.io/automated: "false"
-  namespace: operator-b-ns
+  namespace: operatorb-ns
 spec:
-  releaseName: operator-b
+  releaseName: operatorb-initial-registration
   chart:
-    path: platforms/r3-corda/charts/node
+    path: platforms/r3-corda/charts/node-initial-registration
     git: git@github.com:5GZORRO/blockchain-automation-framework.git
     ref: operator-b
   values:
-    nodeName: operator-b
+    nodeName: operatorb
     replicas: 1
     metadata:
-      namespace: operator-b-ns
+      namespace: operatorb-ns  
     image:
       containerName: index.docker.io/hyperledgerlabs/corda:4.4-linuxkit
       initContainerName: index.docker.io/hyperledgerlabs/alpine-utils:1.0
@@ -25,9 +25,9 @@ spec:
       networkmapCertAlias: 172.28.3.111
     nodeConf:
       p2p:
-        url: operator-b.operator-b-ns
+        url: operatorb.operatorb-ns
         port: 10002
-      ambassadorAddress: operator-b.develop.local.com:15020
+      ambassadorAddress: operatorb.develop.local.com:15020
       rpcSettings:
         useSsl: false
         standAloneBroker: false
@@ -38,6 +38,7 @@ spec:
           sslKeystorePath: na-ssl-false
           trustStoreFilePath: na-ssl-false
       legalName: O=OperatorB,OU=Zurich,L=Zurich,C=CH #use peer-node level subject for legalName
+      notaryServiceLegalName: O=HA Notary,OU=Notary,L=London,C=GB
       messagingServerAddress:
       jvmArgs:
       systemProperties:
@@ -52,10 +53,10 @@ spec:
       database:
         transactionIsolationLevel: READ_COMMITTED
         exportHibernateJMXStatistics: false
-      dbUrl: operator-bdb
+      dbUrl: operatorbdb
       dbPort: 9101
       dataSourceClassName: "org.h2.jdbcx.JdbcDataSource"
-      dataSourceUrl: "jdbc:h2:tcp://operator-bdb:9101/persistence;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=10000;WRITE_DELAY=100;AUTO_RECONNECT=TRUE;"
+      dataSourceUrl: "jdbc:h2:tcp://operatorbdb:9101/persistence;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=10000;WRITE_DELAY=100;AUTO_RECONNECT=TRUE;"
       jarPath: "/data/corda-workspace/h2/bin"
       networkMapURL: http://172.28.3.111:30040
       doormanURL: http://172.28.3.111:30030
@@ -72,56 +73,36 @@ spec:
     credentials:
       dataSourceUser: sa
       rpcUser:
-        - name: operator-boperations
+        - name: operatorboperations
           permissions: [ALL]
-
-    cordapps:
-      getcordapps: false
 
     volume:
       baseDir: /base/corda
     resources:
-      limits: "1Gi"
-      requests: "1Gi" 
-    pvc:
-      name: operator-b-pvc
-      annotations: {}
-      memory: 512Mi
-      storageClassName: longhornstorageclass
-
+      limits: "512Mi"
+      requests: "512Mi"
+    
     service:
-      name: operator-b
       type: ClusterIP
       p2p:
         port: 10002
         targetPort: 10002
       rpc:
         port: 10003
-        targetPort: 10003 
       rpcadmin:
         port: 10005
-        targetPort: 10005
-         
-    deployment:
-      annotations: {}
+
     vault:
       address: http://172.28.3.111
       role: vault-role
-      authpath: cordaoperator-b
+      authpath: cordaoperatorb
       serviceaccountname: vault-auth
-      dbsecretprefix: operator-b/credentials/database
-      rpcusersecretprefix: operator-b/credentials/rpcusers
-      tokensecretprefix: operator-b/credentials/vaultroottoken
-      keystoresecretprefix: operator-b/credentials/keystore
-      certsecretprefix: operator-b/certs
-      networkmapsecretprefix: operator-b/credentials/networkmappassword
-      cordappsreposecretprefix: operator-b/credentials/cordapps
-
-          
+      dbsecretprefix: operatorb/credentials/database
+      rpcusersecretprefix: operatorb/credentials/rpcusers
+      tokensecretprefix: operatorb/credentials/vaultroottoken
+      keystoresecretprefix: operatorb/credentials/keystore
+      certsecretprefix: operatorb/certs
+        
     healthcheck:
-      readinesscheckinterval: 20
-      readinessthreshold: 20
-    ambassador:
-      component_name: operator-b
-      external_url_suffix: develop.local.com
-      p2p_ambassador: 15020
+      readinesscheckinterval: 10
+      readinessthreshold: 15
